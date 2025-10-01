@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/service/firebase/api.service.dart';
-import 'package:wingai/modules/authentication/controllers/authentication_controller.dart';
-import 'package:wingai/modules/chat/models/chat_topic_model.dart';
+import 'package:playground/core/service/firebase/api.service.dart';
+import 'package:playground/modules/authentication/controllers/authentication_controller.dart';
+import 'package:playground/modules/chat/models/chat_topic_model.dart';
 
 class TopicController extends GetxController {
   final authController = Get.find<AuthenticationController>();

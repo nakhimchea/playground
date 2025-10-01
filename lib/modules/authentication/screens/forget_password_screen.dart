@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/modules/authentication/controllers/sign_in_controller.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/modules/authentication/controllers/sign_in_controller.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   const ForgetPasswordScreen({super.key});

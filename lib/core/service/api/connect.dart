@@ -5,11 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:logging/logging.dart';
-import 'package:wingai/core/flavor/app_config.dart';
-import 'package:wingai/core/service/api/interceptors/auth/auth_interceptor.dart';
-import 'package:wingai/core/service/api/interceptors/connectivity/connectivity_interceptor.dart';
-import 'package:wingai/core/service/api/interceptors/logger/logging_interceptor.dart';
-import 'package:wingai/core/service/token_service.dart';
+import 'package:playground/core/flavor/app_config.dart';
+import 'package:playground/core/service/api/interceptors/auth/auth_interceptor.dart';
+import 'package:playground/core/service/api/interceptors/connectivity/connectivity_interceptor.dart';
+import 'package:playground/core/service/api/interceptors/logger/logging_interceptor.dart';
+import 'package:playground/core/service/token_service.dart';
 
 import 'interceptors/retry/retry_interceptor.dart';
 

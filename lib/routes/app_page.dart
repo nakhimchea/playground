@@ -1,10 +1,10 @@
 import 'package:get/route_manager.dart';
-import 'package:wingai/modules/authentication/bindings/sign_in_binding.dart';
-import 'package:wingai/modules/authentication/bindings/sign_up_binding.dart';
-import 'package:wingai/modules/authentication/screens/sign_in_screen.dart';
-import 'package:wingai/modules/authentication/screens/sign_up_screen.dart';
-import 'package:wingai/modules/chat/binding/chat_binding.dart';
-import 'package:wingai/modules/splash/splash.dart';
+import 'package:playground/modules/authentication/bindings/sign_in_binding.dart';
+import 'package:playground/modules/authentication/bindings/sign_up_binding.dart';
+import 'package:playground/modules/authentication/screens/sign_in_screen.dart';
+import 'package:playground/modules/authentication/screens/sign_up_screen.dart';
+import 'package:playground/modules/chat/binding/chat_binding.dart';
+import 'package:playground/modules/splash/splash.dart';
 
 import '../modules/chat/screens/chat_screen.dart';
 

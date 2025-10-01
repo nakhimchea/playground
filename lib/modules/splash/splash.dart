@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/modules/authentication/controllers/authentication_controller.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/modules/authentication/controllers/authentication_controller.dart';
 
 class SplashScreen extends GetView<AuthenticationController> {
   const SplashScreen({super.key});

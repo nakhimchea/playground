@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:wingai/core/constants/asset_path.dart';
-import 'package:wingai/core/themes/styles.dart';
+import 'package:playground/core/constants/asset_path.dart';
+import 'package:playground/core/themes/styles.dart';
 
 // String _getValidImageUrl(String? customUrl, String remoteAssetUrl) {
 //   Uri? uri = Uri.tryParse(customUrl ?? remoteAssetUrl);

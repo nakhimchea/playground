@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/helpers/debouncer.dart';
+import 'package:playground/core/helpers/debouncer.dart';
 
 import '../../widgets/dialog/alert/dialog_manager.dart';
 

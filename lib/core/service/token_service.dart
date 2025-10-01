@@ -1,4 +1,4 @@
-import 'package:wingai/core/constants/enum.dart';
+import 'package:playground/core/constants/enum.dart';
 
 class TokenManager {
   TokenManager._privateConstructor();

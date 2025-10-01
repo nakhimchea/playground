@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/modules/authentication/controllers/authentication_controller.dart';
+import 'package:playground/modules/authentication/controllers/authentication_controller.dart';
 
 class SingInController extends GetxController {
   final authController = Get.find<AuthenticationController>();

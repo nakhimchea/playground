@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/modules/chat/widgets/icon_image.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/modules/chat/widgets/icon_image.dart';
 
 class ChatTextInput extends StatefulWidget {
   final TextEditingController controller;

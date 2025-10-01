@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/helpers/convert.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/modules/chat/controllers/chat_controller.dart';
-import 'package:wingai/modules/chat/widgets/chat_topic.dart';
-import 'package:wingai/modules/chat/widgets/custom_expansion.dart';
-import 'package:wingai/modules/chat/widgets/icon_image.dart';
-import 'package:wingai/widgets/popup_menu_widget.dart';
+import 'package:playground/core/helpers/convert.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/modules/chat/controllers/chat_controller.dart';
+import 'package:playground/modules/chat/widgets/chat_topic.dart';
+import 'package:playground/modules/chat/widgets/custom_expansion.dart';
+import 'package:playground/modules/chat/widgets/icon_image.dart';
+import 'package:playground/widgets/popup_menu_widget.dart';
 
 class ChatDrawer extends StatelessWidget {
   final VoidCallback onMenuPressed;

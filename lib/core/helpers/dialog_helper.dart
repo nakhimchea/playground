@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/helpers/circle_indecator.dart';
+import 'package:playground/core/helpers/circle_indecator.dart';
 
 class DialogHelper {
   static void showLoading(

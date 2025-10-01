@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:toastification/toastification.dart';
-import 'package:wingai/core/helpers/auth_status.dart';
-import 'package:wingai/core/llibraries/storage/shared_preferences.dart';
-import 'package:wingai/core/service/firebase/api.service.dart';
-import 'package:wingai/modules/chat/models/user_model.dart';
+import 'package:playground/core/helpers/auth_status.dart';
+import 'package:playground/core/llibraries/storage/shared_preferences.dart';
+import 'package:playground/core/service/firebase/api.service.dart';
+import 'package:playground/modules/chat/models/user_model.dart';
 
 import '../../../core/helpers/dialog_helper.dart';
 

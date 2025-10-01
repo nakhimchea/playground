@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:wingai/modules/chat/models/chat_topic_model.dart';
+import 'package:playground/modules/chat/models/chat_topic_model.dart';
 
 class FirebaseService {
   final FirebaseFirestore db = FirebaseFirestore.instance;

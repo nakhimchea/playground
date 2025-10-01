@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:wingai/core/service/api/interceptors/auth/auth_interceptor.dart';
+import 'package:playground/core/service/api/interceptors/auth/auth_interceptor.dart';
 
 class DefaultRetryEvaluator {
   DefaultRetryEvaluator(this._retryableStatuses);

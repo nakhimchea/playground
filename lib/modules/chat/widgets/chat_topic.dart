@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/modules/chat/models/chat_topic_model.dart';
-import 'package:wingai/widgets/popup_menu_widget.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/modules/chat/models/chat_topic_model.dart';
+import 'package:playground/widgets/popup_menu_widget.dart';
 
 class ChatTopic extends StatelessWidget {
   final String? currentTopicId;

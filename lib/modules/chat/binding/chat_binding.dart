@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:wingai/modules/chat/controllers/chat_controller.dart';
-import 'package:wingai/modules/chat/controllers/topic_controller.dart';
-import 'package:wingai/modules/chat/controllers/layout_controller.dart';
+import 'package:playground/modules/chat/controllers/chat_controller.dart';
+import 'package:playground/modules/chat/controllers/topic_controller.dart';
+import 'package:playground/modules/chat/controllers/layout_controller.dart';
 
 class ChatBinding extends Bindings {
   @override

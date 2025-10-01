@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wingai/core/themes/styles.dart';
+import 'package:playground/core/themes/styles.dart';
 
 class PopupMenuWidget extends StatelessWidget {
   final Widget child;

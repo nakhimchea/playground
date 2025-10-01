@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/constants/asset_path.dart';
-import 'package:wingai/core/extensions/extensions.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/widgets/base/divider.dart';
-import 'package:wingai/widgets/image/cached_network_image.dart';
+import 'package:playground/core/constants/asset_path.dart';
+import 'package:playground/core/extensions/extensions.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/widgets/base/divider.dart';
+import 'package:playground/widgets/image/cached_network_image.dart';
 // import 'package:wingbrain/core/constants/asset_path.dart';
 // import 'package:wingbrain/core/extensions/extensions.dart';
 // import 'package:wingbrain/core/themes/styles.dart';

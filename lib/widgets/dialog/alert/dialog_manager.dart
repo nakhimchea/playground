@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/extensions/extensions.dart';
-import 'package:wingai/core/helpers/response.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/widgets/image/cached_network_image.dart';
+import 'package:playground/core/extensions/extensions.dart';
+import 'package:playground/core/helpers/response.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/widgets/image/cached_network_image.dart';
 
 import '../../../core/constants/asset_path.dart';
 import '../../../core/flavor/app_config.dart';

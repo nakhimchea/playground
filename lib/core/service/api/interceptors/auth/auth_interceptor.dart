@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart' as dio;
-import 'package:wingai/core/extensions/extensions.dart';
-import 'package:wingai/core/service/api/endpoint.dart';
-import 'package:wingai/core/utils/exception_handler.dart';
+import 'package:playground/core/extensions/extensions.dart';
+import 'package:playground/core/service/api/endpoint.dart';
+import 'package:playground/core/utils/exception_handler.dart';
 
 import '../retry/http_status_codes.dart';
 

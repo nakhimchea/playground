@@ -9,13 +9,13 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:toastification/toastification.dart';
-import 'package:wingai/core/flavor/app_config.dart';
-import 'package:wingai/core/llibraries/connectivity_plus.dart';
-import 'package:wingai/core/service/api/connect.dart';
-import 'package:wingai/core/service/firebase/api.service.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/core/utils/exception_handler.dart';
-import 'package:wingai/modules/authentication/controllers/authentication_controller.dart';
+import 'package:playground/core/flavor/app_config.dart';
+import 'package:playground/core/llibraries/connectivity_plus.dart';
+import 'package:playground/core/service/api/connect.dart';
+import 'package:playground/core/service/firebase/api.service.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/core/utils/exception_handler.dart';
+import 'package:playground/modules/authentication/controllers/authentication_controller.dart';
 
 import 'routes/app_page.dart';
 

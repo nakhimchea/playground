@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/flavor/app_config.dart';
-import 'package:wingai/widgets/dialog/alert/custom_dialog_widget.dart';
-import 'package:wingai/widgets/dialog/alert/dialog_manager.dart';
+import 'package:playground/core/flavor/app_config.dart';
+import 'package:playground/widgets/dialog/alert/custom_dialog_widget.dart';
+import 'package:playground/widgets/dialog/alert/dialog_manager.dart';
 
 import '../constants/asset_path.dart';
 

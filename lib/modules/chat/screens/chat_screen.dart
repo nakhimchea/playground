@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/helpers/convert.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/modules/chat/controllers/chat_controller.dart';
-import 'package:wingai/modules/chat/controllers/layout_controller.dart';
-import 'package:wingai/modules/chat/widgets/chat_drawer.dart';
-import 'package:wingai/modules/chat/widgets/chat_section.dart';
-import 'package:wingai/modules/chat/widgets/circle_local_asset.dart';
-import 'package:wingai/modules/chat/widgets/icon_image.dart';
-import 'package:wingai/modules/chat/widgets/sub_ai_model_item.dart';
-import 'package:wingai/widgets/popup_menu_widget.dart';
+import 'package:playground/core/helpers/convert.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/modules/chat/controllers/chat_controller.dart';
+import 'package:playground/modules/chat/controllers/layout_controller.dart';
+import 'package:playground/modules/chat/widgets/chat_drawer.dart';
+import 'package:playground/modules/chat/widgets/chat_section.dart';
+import 'package:playground/modules/chat/widgets/circle_local_asset.dart';
+import 'package:playground/modules/chat/widgets/icon_image.dart';
+import 'package:playground/modules/chat/widgets/sub_ai_model_item.dart';
+import 'package:playground/widgets/popup_menu_widget.dart';
 
 class ChatScreen extends GetView<ChatController> {
   final layoutController = Get.find<LayoutController>();

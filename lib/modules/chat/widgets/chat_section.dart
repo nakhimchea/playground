@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown_selectionarea/flutter_markdown_selectionarea.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wingai/core/helpers/convert.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/modules/chat/controllers/chat_controller.dart';
-import 'package:wingai/modules/chat/widgets/chat_text_input.dart';
-import 'package:wingai/modules/chat/widgets/code_element_builder.dart';
-import 'package:wingai/modules/chat/widgets/suggested_list.dart';
+import 'package:playground/core/helpers/convert.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/modules/chat/controllers/chat_controller.dart';
+import 'package:playground/modules/chat/widgets/chat_text_input.dart';
+import 'package:playground/modules/chat/widgets/code_element_builder.dart';
+import 'package:playground/modules/chat/widgets/suggested_list.dart';
 
 class Chat extends GetView<ChatController> {
   const Chat({super.key});

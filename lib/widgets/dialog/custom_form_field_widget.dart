@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wingai/core/themes/metrics.dart';
-import 'package:wingai/core/themes/styles.dart';
-import 'package:wingai/modules/chat/widgets/icon_image.dart';
-import 'package:wingai/widgets/button/button_widget.dart';
+import 'package:playground/core/themes/metrics.dart';
+import 'package:playground/core/themes/styles.dart';
+import 'package:playground/modules/chat/widgets/icon_image.dart';
+import 'package:playground/widgets/button/button_widget.dart';
 
 import '../input/inputfield_widget.dart';
 
