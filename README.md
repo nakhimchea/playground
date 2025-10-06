@@ -1,16 +1,17 @@
-# playground
+# Playground
+The AI Playground for LLM Team.
 
-A new Flutter project.
+**Purpose:**
+    Development x Smart x Innovation
 
-## Getting Started
+# Run: 
 
-This project is a starting point for a Flutter application.
+    flutter run --dart-define-from-file=.env
 
-A few resources to get you started if this is your first Flutter project:
+# Build:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    flutter build web --release --dart2js-optimization=O4 --dart-define-from-file=.env
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Description:
+    
+    Web: Chrome & Safari
