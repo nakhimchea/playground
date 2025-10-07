@@ -13,7 +13,9 @@ import '../widgets/custom_divider.dart';
 import '../widgets/custom_markdown.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final String sessionUuid;
+
+  const ChatScreen({super.key, required this.sessionUuid});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -30,8 +32,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Add a welcome message
-    _chatService.addMessage('bot', 'Welcome to the AI Chat! How can I help you today?');
+    // Add a welcome message with session info
+    _chatService.addMessage('bot', 'Welcome to the AI Chat! Session: ${widget.sessionUuid}\nHow can I help you today?');
   }
 
   @override
@@ -223,6 +225,26 @@ class _MessageBubble extends StatelessWidget {
                     Column(
                       crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                       children: [
+                        Builder(builder: (context) {
+                          final double charSize = Theme.of(context).textTheme.bodySmall!.fontSize!;
+                          final double maxSize = MediaQuery.of(context).size.width * (isMe ? 2 / 3 : 4 / 5);
+                          final double width = chatMessage.length < 10
+                              ? charSize * 4
+                              : 0.6 * charSize * chatMessage.length > maxSize
+                                  ? maxSize
+                                  : 0.6 * charSize * chatMessage.length;
+                          return Container(
+                            width: width,
+                            alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                            child: Text(
+                              timeTranslator(AppLocalizations.of(context)!.localeName, dateTime),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(color: Theme.of(context).disabledColor),
+                            ),
+                          );
+                        }),
                         ConstrainedBox(
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * (isMe ? 2 / 3 : 4 / 5),
@@ -260,26 +282,6 @@ class _MessageBubble extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Builder(builder: (context) {
-                          final double charSize = Theme.of(context).textTheme.bodySmall!.fontSize!;
-                          final double maxSize = MediaQuery.of(context).size.width * (isMe ? 2 / 3 : 4 / 5);
-                          final double width = chatMessage.length < 10
-                              ? charSize * 4
-                              : 0.6 * charSize * chatMessage.length > maxSize
-                                  ? maxSize
-                                  : 0.6 * charSize * chatMessage.length;
-                          return Container(
-                            width: width,
-                            alignment: isMe ? Alignment.centerLeft : Alignment.centerRight,
-                            child: Text(
-                              timeTranslator(AppLocalizations.of(context)!.localeName, dateTime),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(color: Theme.of(context).disabledColor),
-                            ),
-                          );
-                        }),
                       ],
                     ),
                   ],
