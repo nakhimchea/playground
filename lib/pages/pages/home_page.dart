@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toastification/toastification.dart';
 import 'package:uuid/uuid.dart';
 
@@ -97,100 +98,303 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Title
-              Text(
-                'Welcome to AI Chat',
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Enter your session ID or press Enter to continue.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).textTheme.bodySmall?.color,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 48),
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
-              // Login TextField
-              CallbackShortcuts(
-                bindings: <ShortcutActivator, VoidCallback>{
-                  const SingleActivator(LogicalKeyboardKey.enter): () => _handleLogin(context),
-                },
-                child: TextField(
-                  controller: _uuidController,
-                  focusNode: _focusNode,
-                  onSubmitted: (_) => _handleLogin(context),
-                  cursorColor: Theme.of(context).primaryColor,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  autocorrect: false,
-                  enableSuggestions: false,
-                  decoration: InputDecoration(
-                    hintText: 'Enter session ID (Optional)',
-                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).hintColor,
-                        ),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).dividerColor,
-                        width: 1,
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: Stack(
+        children: [
+          const _BackdropAura(),
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(left: 24, right: 24, bottom: MediaQuery.of(context).size.height * 0.2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const _LogoBadge(),
+                  const SizedBox(height: 20),
+                  Text(
+                    'LLM Playground',
+                    style: textTheme.displayLarge?.copyWith(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w800,
+                      color: theme.primaryColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Experiment with AI conversations, iterate on prompts, and keep every session organised.',
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: textTheme.bodyMedium?.color?.withValues(alpha: 0.85),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  Card(
+                    elevation: 18,
+                    shadowColor: theme.primaryColor.withValues(alpha: 0.35),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                    color: theme.cardColor.withValues(alpha: 0.9),
+                    child: Padding(
+                      padding: const EdgeInsets.all(28),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Start a new playground session',
+                            style: textTheme.displayMedium?.copyWith(
+                              color: textTheme.displayLarge?.color,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Use an existing session ID to continue where you left off, or leave it blank and we\'ll mint a fresh one for you.',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: textTheme.bodyMedium?.color?.withValues(alpha: 0.9),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          CallbackShortcuts(
+                            bindings: <ShortcutActivator, VoidCallback>{
+                              const SingleActivator(LogicalKeyboardKey.enter): () => _handleLogin(context),
+                            },
+                            child: TextField(
+                              controller: _uuidController,
+                              focusNode: _focusNode,
+                              onSubmitted: (_) => _handleLogin(context),
+                              cursorColor: theme.primaryColor,
+                              style: textTheme.bodyLarge,
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
+                              autocorrect: false,
+                              enableSuggestions: false,
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.key_rounded),
+                                prefixIconColor: theme.primaryColor,
+                                hintText: 'Paste an existing session UUID (optional)',
+                                hintStyle: textTheme.bodyMedium?.copyWith(
+                                  color: theme.hintColor,
+                                ),
+                                filled: true,
+                                fillColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.65),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: theme.dividerColor,
+                                    width: 1.2,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: theme.dividerColor,
+                                    width: 1.2,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: theme.primaryColor,
+                                    width: 2,
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Tip: keep the session ID handy to sync chats across devices.',
+                            style: textTheme.bodySmall?.copyWith(
+                              color: textTheme.bodySmall?.color?.withValues(alpha: 0.8),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).dividerColor,
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
-                        width: 2,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LogoBadge extends StatelessWidget {
+  const _LogoBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      width: 124,
+      height: 124,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [
+            theme.primaryColor.withValues(alpha: 0.65),
+            theme.cardColor.withValues(alpha: 0.2),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: theme.primaryColor.withValues(alpha: 0.4),
+            blurRadius: 32,
+            spreadRadius: 4,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(18),
+      child: SvgPicture.asset(
+        'assets/images/playground_logo.svg',
+        semanticsLabel: 'LLM Playground logo',
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+}
+
+class _PromptIdea {
+  const _PromptIdea({
+    required this.title,
+    required this.description,
+  });
+
+  final String title;
+  final String description;
+}
+
+class _PromptIdeaTile extends StatelessWidget {
+  const _PromptIdeaTile({required this.idea});
+
+  final _PromptIdea idea;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.4)),
+        color: theme.cardColor.withValues(alpha: 0.72),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: theme.primaryColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.primaryColor.withValues(alpha: 0.5),
+                      blurRadius: 12,
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  idea.title,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: textTheme.displaySmall?.color,
                   ),
                 ),
               ),
-
-              const SizedBox(height: 24),
-
-              // Info text
-              Text(
-                'Leave empty to generate a new session ID.',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
-                    ),
-                textAlign: TextAlign.center,
-              ),
             ],
           ),
+          const SizedBox(height: 12),
+          Text(
+            idea.description,
+            style: textTheme.bodyMedium?.copyWith(
+              color: textTheme.bodyMedium?.color?.withValues(alpha: 0.85),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BackdropAura extends StatelessWidget {
+  const _BackdropAura();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return IgnorePointer(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              theme.primaryColor.withValues(alpha: 0.18),
+              theme.scaffoldBackgroundColor,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: -120,
+              left: -60,
+              child: _glowCircle(theme.primaryColor.withValues(alpha: 0.35), 260),
+            ),
+            Positioned(
+              top: 180,
+              right: -90,
+              child: _glowCircle(theme.primaryColor.withValues(alpha: 0.25), 220),
+            ),
+            Positioned(
+              bottom: -140,
+              left: 40,
+              child: _glowCircle(theme.primaryColor.withValues(alpha: 0.2), 280),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _glowCircle(Color color, double diameter) {
+    return Container(
+      width: diameter,
+      height: diameter,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+        boxShadow: [
+          BoxShadow(
+            color: color,
+            blurRadius: diameter / 2.2,
+            spreadRadius: diameter / 8,
+          ),
+        ],
       ),
     );
   }

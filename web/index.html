@@ -18,21 +18,121 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="LLM Playground — craft, test, and share AI chat experiences in your browser.">
+  <meta name="theme-color" content="#111827">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="playground">
+  <meta name="apple-mobile-web-app-title" content="LLM Playground">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <link rel="alternate icon" type="image/png" href="favicon.png"/>
 
-  <title>playground</title>
+  <title>LLM Playground</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      margin: 0;
+      background: #050510;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e8edf7;
+    }
+    #playground-splash {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(99,103,255,0.32) 0%, rgba(5,5,16,0.95) 60%, #050510 100%);
+      z-index: 9999;
+      transition: opacity 220ms ease-out;
+    }
+    #playground-splash.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .splash-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 32px 40px;
+      background: rgba(10, 12, 32, 0.78);
+      border: 1px solid rgba(120, 130, 255, 0.18);
+      border-radius: 28px;
+      box-shadow:
+        0 24px 60px rgba(40, 44, 128, 0.35),
+        inset 0 0 32px rgba(174, 70, 255, 0.08);
+      text-align: center;
+      max-width: min(90vw, 420px);
+    }
+    .splash-logo {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, rgba(63,145,255,0.45), rgba(174,70,255,0.25));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 20px 36px rgba(99,103,255,0.35);
+    }
+    .splash-logo img {
+      width: 68px;
+      height: 68px;
+    }
+    .splash-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .splash-tagline {
+      font-size: 0.95rem;
+      color: rgba(225, 232, 255, 0.8);
+      line-height: 1.6;
+    }
+    .splash-spinner {
+      margin-top: 12px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 4px solid rgba(126, 133, 255, 0.24);
+      border-top-color: rgba(102, 255, 226, 0.88);
+      animation: splash-spin 1s ease-in-out infinite;
+    }
+    @keyframes splash-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .splash-spinner {
+        animation: none;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div id="playground-splash">
+    <div class="splash-card">
+      <div class="splash-logo">
+        <img src="logo.svg" alt="LLM Playground logo">
+      </div>
+      <div class="splash-title">LLM Playground</div>
+      <div class="splash-tagline">Spinning up your chat agents and loading assets…</div>
+      <div class="splash-spinner" role="status" aria-label="Loading"></div>
+    </div>
+  </div>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      const splash = document.getElementById('playground-splash');
+      if (!splash) return;
+      splash.classList.add('hidden');
+      setTimeout(() => splash.remove(), 320);
+    });
+  </script>
 </body>
 </html>

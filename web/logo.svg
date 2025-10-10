@@ -1,0 +1,28 @@
+<svg width="280" height="280" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="glow" x1="20%" y1="10%" x2="80%" y2="95%">
+      <stop offset="0%" stop-color="#3F91FF"/>
+      <stop offset="50%" stop-color="#6367FF"/>
+      <stop offset="100%" stop-color="#AE46FF"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#66FFE2"/>
+      <stop offset="100%" stop-color="#31D8FF"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%" filterUnits="objectBoundingBox">
+      <feDropShadow dx="0" dy="22" stdDeviation="24" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect x="24" y="24" width="232" height="232" rx="64" fill="url(#glow)" filter="url(#shadow)"/>
+  <g transform="translate(40 58)">
+    <rect x="26" y="36" width="132" height="96" rx="36" fill="#FFFFFF" fill-opacity="0.94"/>
+    <path d="M82 132 L76 162 C74 169 82 174 88 169 L114 144" fill="#FFFFFF" fill-opacity="0.94"/>
+    <rect x="96" y="18" width="132" height="96" rx="36" fill="#0D1024" fill-opacity="0.7"/>
+    <path d="M190 114 L196 148 C197 155 189 159 184 154 L156 128" fill="#0D1024" fill-opacity="0.7"/>
+    <rect x="114" y="36" width="96" height="22" rx="11" fill="#FFFFFF" fill-opacity="0.88"/>
+    <rect x="114" y="68" width="72" height="18" rx="9" fill="#FFFFFF" fill-opacity="0.76"/>
+    <circle cx="66" cy="82" r="18" fill="url(#accent)"/>
+    <circle cx="198" cy="32" r="18" fill="#66FFE2" fill-opacity="0.28"/>
+  </g>
+  <circle cx="214" cy="72" r="18" fill="url(#accent)" fill-opacity="0.65"/>
+</svg>

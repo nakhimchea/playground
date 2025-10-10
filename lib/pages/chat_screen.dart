@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../config/configs.dart';
 import '../helpers/custom_scroll_physics.dart';
@@ -76,9 +77,21 @@ class _ChatScreenState extends State<ChatScreen> {
             size: 20,
           ),
         ),
-        title: Text(
-          'AI Chat',
-          style: Theme.of(context).textTheme.displaySmall,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              'assets/images/playground_logo.svg',
+              width: 28,
+              height: 28,
+              semanticsLabel: 'LLM Playground logo',
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'LLM Playground',
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+          ],
         ),
       ),
       body: SafeArea(
