@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show SystemUiOverlayStyle;
-import 'package:flutter_svg/svg.dart';
-import 'package:playground/config/constant.dart' show kVPadding;
+import 'package:flutter_svg/svg.dart' show SvgPicture;
+
+import '../config/constant.dart' show kHPadding;
+import '../icons/icons.dart';
 
 class SessionScreen extends StatefulWidget {
   final String sessionUuid;
@@ -12,59 +13,227 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
+  bool isExpanded = true;
+  bool isHover = false;
+
+  void _toggleExpanded() {
+    setState(() {
+      isExpanded = !isExpanded;
+      if (!isExpanded) {
+        isHover = false;
+      }
+    });
+  }
+
+  void _handleHoverChanged(bool value) {
+    if (isHover == value) return;
+    setState(() {
+      isHover = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.7,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Theme.of(context).brightness != Brightness.dark ? Brightness.dark : Brightness.light,
-        ),
-        toolbarHeight: kToolbarHeight + kVPadding,
-        backgroundColor: Theme.of(context).cardColor,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).cardColor,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+      body: isExpanded
+          ? _Expanded(
+              isExpanded: isExpanded,
+              isHover: isHover,
+              onHoverChanged: _handleHoverChanged,
+              onToggle: _toggleExpanded,
+            )
+          : _Collapsed(
+              isExpanded: isExpanded,
+              onToggle: _toggleExpanded,
+              sessionUuid: widget.sessionUuid,
+            ),
+    );
+  }
+}
+
+class _Expanded extends StatelessWidget {
+  const _Expanded({
+    required this.isExpanded,
+    required this.isHover,
+    required this.onHoverChanged,
+    required this.onToggle,
+  });
+
+  final bool isExpanded;
+  final bool isHover;
+  final ValueChanged<bool> onHoverChanged;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(kHPadding),
+      width: 68,
+      color: Colors.black,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          MouseRegion(
+            onEnter: (_) => onHoverChanged(true),
+            onExit: (_) => onHoverChanged(false),
+            child: isHover
+                ? IconButton(
+                    onPressed: () {
+                      onHoverChanged(false);
+                      onToggle();
+                    },
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints.tightFor(width: 36, height: 36),
+                    icon: Icon(
+                      isExpanded ? Icons.arrow_back_ios_outlined : Icons.arrow_forward_ios_outlined,
+                      size: 18,
+                    ),
+                  )
+                : SvgPicture.asset(
+                    'assets/images/playground_logo.svg',
+                    width: 36,
+                    height: 36,
+                    fit: BoxFit.contain,
+                  ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Icon(
+              CustomOutlinedIcons.new_icon,
+              color: Colors.white,
             ),
           ),
-        ),
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          highlightColor: Theme.of(context).highlightColor,
-          hoverColor: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.5),
-          splashColor: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.5),
-          child: Icon(
-            Icons.arrow_back_ios_new,
-            color: Theme.of(context).primaryIconTheme.color,
-            size: 20,
+          Expanded(child: const SizedBox.shrink()),
+          const SizedBox(height: 12),
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: Colors.white12,
+            child: Text(
+              'GU',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+            ),
           ),
-        ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              'assets/images/playground_logo.svg',
-              width: 28,
-              height: 28,
-              semanticsLabel: 'LLM Playground logo',
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'LLM Playground',
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-          ],
-        ),
+        ],
       ),
-      body: SafeArea(
-        child: Container(),
+    );
+  }
+}
+
+class _Collapsed extends StatelessWidget {
+  const _Collapsed({
+    required this.isExpanded,
+    required this.onToggle,
+    required this.sessionUuid,
+  });
+
+  final bool isExpanded;
+  final VoidCallback onToggle;
+  final String sessionUuid;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(kHPadding),
+      width: MediaQuery.of(context).size.width / 5,
+      color: Colors.black,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                'assets/images/playground_logo.svg',
+                width: 36,
+                height: 36,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'LLM Playground',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: onToggle,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints.tightFor(width: 36, height: 36),
+                icon: Icon(
+                  isExpanded ? Icons.arrow_back_ios_outlined : Icons.arrow_forward_ios_outlined,
+                  size: 18,
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Row(
+              children: [
+                Icon(
+                  CustomOutlinedIcons.new_icon,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'New chat',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Chats',
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                const SizedBox(height: 5),
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return Text(
+                        index.toString(),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),
+                      );
+                    },
+                    itemCount: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Divider(height: 0.2, thickness: 0.2, color: Colors.grey),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: Colors.white12,
+                child: Text(
+                  'GU',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Guest User',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                  ),
+                  Text(
+                    sessionUuid,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

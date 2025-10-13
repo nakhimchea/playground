@@ -69,7 +69,7 @@ class PlaygroundApp extends StatelessWidget {
           themeMode: ThemeMode.dark,
           theme: Provider.of<ThemeProvider>(context).themeOption,
           darkTheme: PlaygroundTheme.dark,
-          home: SessionScreen(sessionUuid: ''),
+          home: SessionScreen(sessionUuid: 'Seruidfweuiwe'),
           builder: (context, widget) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(
