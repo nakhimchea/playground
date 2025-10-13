@@ -125,10 +125,10 @@ class _Expanded extends StatelessWidget {
                   ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 24),
             child: Icon(
               CustomOutlinedIcons.new_icon,
-              color: Colors.white,
+              color: Colors.white70,
             ),
           ),
           Expanded(child: const SizedBox.shrink()),
@@ -195,17 +195,32 @@ class _Collapsed extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Row(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 24),
+            child: Stack(
               children: [
-                Icon(
-                  CustomOutlinedIcons.new_icon,
-                  color: Colors.white,
+                Row(
+                  children: [
+                    Icon(
+                      CustomOutlinedIcons.new_icon,
+                      color: Colors.white70,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'New chat',
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white70),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  'New chat',
-                  style: Theme.of(context).textTheme.titleMedium,
+                Positioned.fill(
+                  child: MaterialButton(
+                    onPressed: () {
+                      Future.delayed(const Duration(milliseconds: 150), onToggle);
+                    },
+                    minWidth: 0,
+                    elevation: 0,
+                    highlightElevation: 0,
+                    padding: EdgeInsets.zero,
+                  ),
                 ),
               ],
             ),
@@ -222,9 +237,21 @@ class _Collapsed extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                     itemBuilder: (context, index) {
-                      return Text(
-                        "(MODEL_NAME) Some Sample Chat Title $index",
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),
+                      return MaterialButton(
+                        onPressed: () {
+                          Future.delayed(const Duration(milliseconds: 150), onToggle);
+                        },
+                        minWidth: 0,
+                        elevation: 0,
+                        highlightElevation: 0,
+                        padding: EdgeInsets.symmetric(vertical: kHPadding),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        color: Colors.transparent,
+                        splashColor: Colors.white.withValues(alpha: 0.1),
+                        child: Text(
+                          "(MODEL_NAME) Some Sample Chat Title $index",
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),
+                        ),
                       );
                     },
                     itemCount: 10,
@@ -235,30 +262,45 @@ class _Collapsed extends StatelessWidget {
           ),
           Divider(height: 0.2, thickness: 0.2, color: Colors.grey),
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Stack(
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: Colors.white12,
-                child: Text(
-                  'GU',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    'Guest User',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Colors.white12,
+                    child: Text(
+                      'GU',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                    ),
                   ),
-                  Text(
-                    sessionUuid,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Guest User',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        sessionUuid,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                      ),
+                    ],
                   ),
+                  Spacer(),
+                  Icon(Icons.settings, color: Colors.white70),
                 ],
+              ),
+              Positioned.fill(
+                child: MaterialButton(
+                  onPressed: () {},
+                  minWidth: 0,
+                  elevation: 0,
+                  highlightElevation: 0,
+                  padding: EdgeInsets.zero,
+                ),
               ),
             ],
           ),
