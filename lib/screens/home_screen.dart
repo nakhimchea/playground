@@ -4,16 +4,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toastification/toastification.dart';
 import 'package:uuid/uuid.dart';
 
-import '../chat_screen.dart';
+import 'session_screen.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _uuidController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   String? _sessionUuid;
@@ -21,7 +21,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Auto-focus the text field when the page loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
     });
@@ -91,7 +90,7 @@ class _HomePageState extends State<HomePage> {
     // Navigate to chat screen with the session UUID
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ChatScreen(sessionUuid: _sessionUuid!),
+        builder: (context) => SessionScreen(sessionUuid: _sessionUuid!),
       ),
     );
   }
@@ -263,77 +262,6 @@ class _LogoBadge extends StatelessWidget {
         'assets/images/playground_logo.svg',
         semanticsLabel: 'LLM Playground logo',
         fit: BoxFit.contain,
-      ),
-    );
-  }
-}
-
-class _PromptIdea {
-  const _PromptIdea({
-    required this.title,
-    required this.description,
-  });
-
-  final String title;
-  final String description;
-}
-
-class _PromptIdeaTile extends StatelessWidget {
-  const _PromptIdeaTile({required this.idea});
-
-  final _PromptIdea idea;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.4)),
-        color: theme.cardColor.withValues(alpha: 0.72),
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: theme.primaryColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.primaryColor.withValues(alpha: 0.5),
-                      blurRadius: 12,
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  idea.title,
-                  style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: textTheme.displaySmall?.color,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            idea.description,
-            style: textTheme.bodyMedium?.copyWith(
-              color: textTheme.bodyMedium?.color?.withValues(alpha: 0.85),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -14,9 +14,8 @@ import '../widgets/custom_divider.dart';
 import '../widgets/custom_markdown.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String sessionUuid;
-
-  const ChatScreen({super.key, required this.sessionUuid});
+  final String chatId;
+  const ChatScreen({super.key, required this.chatId});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -33,8 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Add a welcome message with session info
-    _chatService.addMessage('bot', 'Welcome to the AI Chat! Session: ${widget.sessionUuid}\nHow can I help you today?');
+    _chatService.addMessage('bot', 'Welcome to the AI Chat! Chat: ${widget.chatId}\nHow can I help you today?');
   }
 
   @override

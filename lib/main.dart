@@ -12,14 +12,15 @@ import 'package:playground/config/constant.dart'
         firebaseOptionsMessagingSenderId,
         firebaseOptionsAppId,
         firebaseOptionsMeasurementId;
+import 'package:playground/screens/session_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'config/variable.dart';
 import 'l10n/locales.dart';
+// import 'screens/home_screen.dart';
 import 'providers/locale_provider.dart';
 import 'providers/theme_provider.dart';
-import 'responsives/web_responsive_decider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
@@ -54,7 +55,7 @@ class PlaygroundApp extends StatelessWidget {
         ),
       ],
       builder: (context, _) {
-        return MaterialApp.router(
+        return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Playground',
           locale: Provider.of<LocaleProvider>(context).locale ?? const Locale.fromSubtags(languageCode: 'en'),
@@ -68,7 +69,7 @@ class PlaygroundApp extends StatelessWidget {
           themeMode: ThemeMode.dark,
           theme: Provider.of<ThemeProvider>(context).themeOption,
           darkTheme: PlaygroundTheme.dark,
-          routerConfig: appRouter,
+          home: SessionScreen(sessionUuid: ''),
           builder: (context, widget) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(
