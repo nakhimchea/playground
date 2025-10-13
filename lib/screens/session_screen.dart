@@ -35,24 +35,52 @@ class _SessionScreenState extends State<SessionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isExpanded
-          ? _Expanded(
-              isExpanded: isExpanded,
-              isHover: isHover,
-              onHoverChanged: _handleHoverChanged,
-              onToggle: _toggleExpanded,
-            )
-          : _Collapsed(
-              isExpanded: isExpanded,
-              onToggle: _toggleExpanded,
-              sessionUuid: widget.sessionUuid,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        layoutBuilder: (currentChild, previousChildren) {
+          return Stack(
+            alignment: Alignment.centerLeft,
+            children: [
+              ...previousChildren,
+              if (currentChild != null) currentChild,
+            ],
+          );
+        },
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: SizeTransition(
+              sizeFactor: animation,
+              axis: Axis.horizontal,
+              axisAlignment: -1,
+              child: child,
             ),
+          );
+        },
+        child: isExpanded
+            ? _Expanded(
+                key: const ValueKey('expanded-panel'),
+                isExpanded: isExpanded,
+                isHover: isHover,
+                onHoverChanged: _handleHoverChanged,
+                onToggle: _toggleExpanded,
+              )
+            : _Collapsed(
+                key: const ValueKey('collapsed-panel'),
+                isExpanded: isExpanded,
+                onToggle: _toggleExpanded,
+                sessionUuid: widget.sessionUuid,
+              ),
+      ),
     );
   }
 }
 
 class _Expanded extends StatelessWidget {
   const _Expanded({
+    super.key,
     required this.isExpanded,
     required this.isHover,
     required this.onHoverChanged,
@@ -85,7 +113,7 @@ class _Expanded extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints.tightFor(width: 36, height: 36),
                     icon: Icon(
-                      isExpanded ? Icons.arrow_back_ios_outlined : Icons.arrow_forward_ios_outlined,
+                      isExpanded ? Icons.arrow_forward_ios_outlined : Icons.arrow_back_ios_outlined,
                       size: 18,
                     ),
                   )
@@ -121,6 +149,7 @@ class _Expanded extends StatelessWidget {
 
 class _Collapsed extends StatelessWidget {
   const _Collapsed({
+    super.key,
     required this.isExpanded,
     required this.onToggle,
     required this.sessionUuid,
@@ -159,7 +188,7 @@ class _Collapsed extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints.tightFor(width: 36, height: 36),
                 icon: Icon(
-                  isExpanded ? Icons.arrow_back_ios_outlined : Icons.arrow_forward_ios_outlined,
+                  isExpanded ? Icons.arrow_forward_ios_outlined : Icons.arrow_back_ios_outlined,
                   size: 18,
                 ),
               ),
@@ -194,7 +223,7 @@ class _Collapsed extends StatelessWidget {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       return Text(
-                        index.toString(),
+                        "(MODEL_NAME) Some Sample Chat Title $index",
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),
                       );
                     },
