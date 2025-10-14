@@ -40,10 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final inputUuid = _uuidController.text.trim();
 
     if (inputUuid.isEmpty) {
-      // Generate a new UUID if no input provided
       _sessionUuid = const Uuid().v4();
 
-      // Show a dialog to the user and click okay to close and can be copied to the clipboard
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -83,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     } else {
-      // Use the provided UUID
       _sessionUuid = inputUuid;
     }
 
@@ -107,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const _BackdropAura(),
           SafeArea(
             child: Padding(
-              padding: EdgeInsets.only(left: 24, right: 24, bottom: MediaQuery.of(context).size.height * 0.2),
+              padding: EdgeInsets.only(left: 24, right: 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

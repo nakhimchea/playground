@@ -12,16 +12,16 @@ import 'package:playground/config/constant.dart'
         firebaseOptionsMessagingSenderId,
         firebaseOptionsAppId,
         firebaseOptionsMeasurementId;
-import 'package:playground/screens/session_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'config/variable.dart';
 import 'l10n/locales.dart';
-// import 'screens/home_screen.dart';
 import 'providers/locale_provider.dart';
 import 'providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,7 +69,7 @@ class PlaygroundApp extends StatelessWidget {
           themeMode: ThemeMode.dark,
           theme: Provider.of<ThemeProvider>(context).themeOption,
           darkTheme: PlaygroundTheme.dark,
-          home: SessionScreen(sessionUuid: 'Seruidfweuiwe'),
+          home: HomeScreen(),
           builder: (context, widget) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(
