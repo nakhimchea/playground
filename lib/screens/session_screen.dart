@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart' show SvgPicture;
 
 import '../config/constant.dart' show kHPadding, kVPadding;
@@ -13,18 +14,18 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-  bool isNew = true;
+  bool isNewChat = true;
   bool isColapsed = true;
   bool isHover = false;
 
-  void _toggleColapsed() {
-    setState(() {
-      isColapsed = !isColapsed;
-      if (!isColapsed) {
-        isHover = false;
-      }
-    });
-  }
+  void _toggleNewChat() => setState(() => isNewChat = !isNewChat);
+
+  void _toggleColapsed() => setState(() {
+        isColapsed = !isColapsed;
+        if (!isColapsed) {
+          isHover = false;
+        }
+      });
 
   void _handleHoverChanged(bool value) {
     if (isHover == value) return;
@@ -32,6 +33,9 @@ class _SessionScreenState extends State<SessionScreen> {
       isHover = value;
     });
   }
+
+  String _message = '';
+  void _onMessageSending(String text) => setState(() => _message = text);
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +82,12 @@ class _SessionScreenState extends State<SessionScreen> {
                   ),
           ),
           Expanded(
-            child: isNew ? _StartNewChat() : _ShowChatScreen(),
+            child: isNewChat
+                ? _StartNewChat(
+                    toggleNewChat: _toggleNewChat,
+                    onMessageSending: _onMessageSending,
+                  )
+                : _ShowChatScreen(),
           ),
         ],
       ),
@@ -87,18 +96,140 @@ class _SessionScreenState extends State<SessionScreen> {
 }
 
 class _StartNewChat extends StatefulWidget {
-  const _StartNewChat();
+  final void Function() toggleNewChat;
+  final void Function(String) onMessageSending;
+  const _StartNewChat({required this.toggleNewChat, required this.onMessageSending});
 
   @override
   State<_StartNewChat> createState() => __StartNewChatState();
 }
 
 class __StartNewChatState extends State<_StartNewChat> {
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _sendingMessageController = TextEditingController();
+  String _message = '';
+
+  void _onSending(BuildContext context) async {
+    _focusNode.unfocus();
+    _sendingMessageController.clear();
+    if (context.mounted) {
+      setState(() => _message = '');
+      widget.onMessageSending(_message);
+      Future.delayed(const Duration(milliseconds: 333), () => widget.toggleNewChat());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Text(
-      "Start New Chat",
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Let's get you started with a model.",
+            style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.white70),
+          ),
+          const SizedBox(height: kHPadding),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth / 5),
+            child: Wrap(
+              spacing: kHPadding,
+              runSpacing: kHPadding,
+              children: List.generate(
+                4,
+                (index) {
+                  return Container(
+                    height: 100,
+                    width: constraints.maxWidth / 4,
+                    padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.white70,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: kHPadding),
+          Text(
+            "What can I help you with?",
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          const SizedBox(height: kHPadding),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth / 5),
+            child: CallbackShortcuts(
+              bindings: <ShortcutActivator, VoidCallback>{
+                const SingleActivator(LogicalKeyboardKey.enter): () {
+                  if (_sendingMessageController.text.trim().isNotEmpty) {
+                    _onSending(context);
+                  }
+                },
+              },
+              child: TextField(
+                minLines: 1,
+                maxLines: 5,
+                controller: _sendingMessageController,
+                focusNode: _focusNode,
+                onTapOutside: (_) => _focusNode.unfocus(),
+                onChanged: (text) => setState(() => _message = text.trim()),
+                cursorColor: Theme.of(context).primaryColor,
+                style:
+                    Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).primaryIconTheme.color),
+                autocorrect: false,
+                enableSuggestions: false,
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  fillColor: Theme.of(context).scaffoldBackgroundColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).iconTheme.color!, width: 1),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).iconTheme.color!, width: 1),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  contentPadding: const EdgeInsets.only(
+                    left: kHPadding,
+                    top: 3 + kHPadding,
+                    right: kHPadding,
+                    bottom: kHPadding,
+                  ),
+                  hintText: 'Aa',
+                  hintStyle: Theme.of(context).textTheme.bodyMedium,
+                  suffixIcon: _message != ''
+                      ? GestureDetector(
+                          onTap: () => _onSending(context),
+                          child: Icon(
+                            Icons.send_rounded,
+                            size: 32,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+              ),
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 
