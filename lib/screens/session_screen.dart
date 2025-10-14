@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart' show SvgPicture;
 
 import '../config/constant.dart' show kHPadding, kVPadding;
 import '../icons/icons.dart';
+import 'chat_section.dart';
 
 class SessionScreen extends StatefulWidget {
   final String sessionUuid;
@@ -18,7 +19,7 @@ class _SessionScreenState extends State<SessionScreen> {
   bool isColapsed = true;
   bool isHover = false;
 
-  void _toggleNewChat() => setState(() => isNewChat = !isNewChat);
+  void _toggleNewChat({bool? thisOne}) => setState(() => isNewChat = thisOne ?? !isNewChat);
 
   void _toggleColapsed() => setState(() {
         isColapsed = !isColapsed;
@@ -73,12 +74,14 @@ class _SessionScreenState extends State<SessionScreen> {
                     isHover: isHover,
                     onHoverChanged: _handleHoverChanged,
                     onToggleColapsed: _toggleColapsed,
+                    onToggleNewChat: _toggleNewChat,
                   )
                 : _Expanded(
                     key: const ValueKey('expanded-panel'),
                     isColapsed: isColapsed,
                     onToggleColapsed: _toggleColapsed,
                     sessionUuid: widget.sessionUuid,
+                    onToggleNewChat: _toggleNewChat,
                   ),
           ),
           Expanded(
@@ -87,7 +90,10 @@ class _SessionScreenState extends State<SessionScreen> {
                     toggleNewChat: _toggleNewChat,
                     onMessageSending: _onMessageSending,
                   )
-                : _ShowChatScreen(),
+                : ChatSection(
+                    chatId: 'user',
+                    initialMessage: _message,
+                  ),
           ),
         ],
       ),
@@ -96,7 +102,7 @@ class _SessionScreenState extends State<SessionScreen> {
 }
 
 class _StartNewChat extends StatefulWidget {
-  final void Function() toggleNewChat;
+  final void Function({bool? thisOne}) toggleNewChat;
   final void Function(String) onMessageSending;
   const _StartNewChat({required this.toggleNewChat, required this.onMessageSending});
 
@@ -113,8 +119,8 @@ class __StartNewChatState extends State<_StartNewChat> {
     _focusNode.unfocus();
     _sendingMessageController.clear();
     if (context.mounted) {
-      setState(() => _message = '');
       widget.onMessageSending(_message);
+      setState(() => _message = '');
       Future.delayed(const Duration(milliseconds: 333), () => widget.toggleNewChat());
     }
   }
@@ -233,22 +239,6 @@ class __StartNewChatState extends State<_StartNewChat> {
   }
 }
 
-class _ShowChatScreen extends StatefulWidget {
-  const _ShowChatScreen();
-
-  @override
-  State<_ShowChatScreen> createState() => __ShowChatScreenState();
-}
-
-class __ShowChatScreenState extends State<_ShowChatScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      "Show Chat Screen",
-    );
-  }
-}
-
 double measureTextHeight(BuildContext context, String text, TextStyle style) {
   final TextPainter painter = TextPainter(
     text: TextSpan(text: text, style: style),
@@ -259,18 +249,20 @@ double measureTextHeight(BuildContext context, String text, TextStyle style) {
 }
 
 class _Colapsed extends StatelessWidget {
+  final bool isColapsed;
+  final bool isHover;
+  final ValueChanged<bool> onHoverChanged;
+  final VoidCallback onToggleColapsed;
+  final void Function({bool? thisOne}) onToggleNewChat;
+
   const _Colapsed({
     super.key,
     required this.isColapsed,
     required this.isHover,
     required this.onHoverChanged,
     required this.onToggleColapsed,
+    required this.onToggleNewChat,
   });
-
-  final bool isColapsed;
-  final bool isHover;
-  final ValueChanged<bool> onHoverChanged;
-  final VoidCallback onToggleColapsed;
 
   @override
   Widget build(BuildContext context) {
@@ -306,9 +298,16 @@ class _Colapsed extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 24),
-            child: Icon(
-              CustomOutlinedIcons.new_icon,
-              color: Colors.white70,
+            child: MaterialButton(
+              onPressed: () => onToggleNewChat(thisOne: true),
+              minWidth: 0,
+              elevation: 0,
+              highlightElevation: 0,
+              padding: EdgeInsets.zero,
+              child: Icon(
+                CustomOutlinedIcons.new_icon,
+                color: Colors.white70,
+              ),
             ),
           ),
           Expanded(child: const SizedBox.shrink()),
@@ -434,16 +433,18 @@ class _MenuOption<T> {
 }
 
 class _Expanded extends StatelessWidget {
+  final bool isColapsed;
+  final VoidCallback onToggleColapsed;
+  final String sessionUuid;
+  final void Function({bool? thisOne}) onToggleNewChat;
+
   const _Expanded({
     super.key,
     required this.isColapsed,
     required this.onToggleColapsed,
     required this.sessionUuid,
+    required this.onToggleNewChat,
   });
-
-  final bool isColapsed;
-  final VoidCallback onToggleColapsed;
-  final String sessionUuid;
 
   @override
   Widget build(BuildContext context) {
@@ -562,6 +563,7 @@ class _Expanded extends StatelessWidget {
                   child: MaterialButton(
                     onPressed: () {
                       Future.delayed(const Duration(milliseconds: 150), onToggleColapsed);
+                      onToggleNewChat(thisOne: true);
                     },
                     minWidth: 0,
                     elevation: 0,

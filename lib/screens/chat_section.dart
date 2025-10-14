@@ -1,27 +1,27 @@
-import 'dart:convert';
+import 'dart:convert' show jsonDecode;
 
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:animated_text_kit/animated_text_kit.dart' show AnimatedTextKit, FadeAnimatedText;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 
-import '../config/configs.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../config/constant.dart' show kHPadding, kVPadding;
 import '../helpers/custom_scroll_physics.dart';
 import '../helpers/time_translator.dart';
 import '../services/mock_chat_service.dart';
 import '../widgets/custom_divider.dart';
 import '../widgets/custom_markdown.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatSection extends StatefulWidget {
   final String chatId;
-  const ChatScreen({super.key, required this.chatId});
+  final String? initialMessage;
+  const ChatSection({super.key, required this.chatId, this.initialMessage});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatSection> createState() => _ChatSectionState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatSectionState extends State<ChatSection> {
   String? _status;
   final MockChatService _chatService = MockChatService();
 
@@ -32,83 +32,32 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    _chatService.addMessage('bot', 'Welcome to the AI Chat! Chat: ${widget.chatId}\nHow can I help you today?');
-  }
-
-  @override
-  void dispose() {
-    _chatService.dispose();
-    super.dispose();
+    _chatService.clearMessages();
+    Future.delayed(const Duration(microseconds: 10), () async {
+      if (widget.initialMessage != null) {
+        _chatService.addMessage('user', widget.initialMessage!);
+        await Future.delayed(const Duration(seconds: 1));
+        _chatService.addBotResponse('user');
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.7,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Theme.of(context).brightness != Brightness.dark ? Brightness.dark : Brightness.light,
+    return Stack(
+      alignment: Alignment.bottomLeft,
+      children: [
+        _MessageStreamer(
+          status: _status,
+          statusCallback: (status) => _changeStatus(context, status),
+          chatService: _chatService,
         ),
-        toolbarHeight: kToolbarHeight + kVPadding,
-        backgroundColor: Theme.of(context).cardColor,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).cardColor,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
+        _MessageSender(
+          status: _status,
+          statusCallback: (status) => _changeStatus(context, status),
+          chatService: _chatService,
         ),
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          highlightColor: Theme.of(context).highlightColor,
-          hoverColor: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.5),
-          splashColor: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.5),
-          child: Icon(
-            Icons.arrow_back_ios_new,
-            color: Theme.of(context).primaryIconTheme.color,
-            size: 20,
-          ),
-        ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              'assets/images/playground_logo.svg',
-              width: 28,
-              height: 28,
-              semanticsLabel: 'LLM Playground logo',
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'LLM Playground',
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-          ],
-        ),
-      ),
-      body: SafeArea(
-        child: Stack(
-          alignment: Alignment.bottomLeft,
-          children: [
-            _MessageStreamer(
-              status: _status,
-              statusCallback: (status) => _changeStatus(context, status),
-              chatService: _chatService,
-            ),
-            _MessageSender(
-              status: _status,
-              statusCallback: (status) => _changeStatus(context, status),
-              chatService: _chatService,
-            ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 }
@@ -238,7 +187,7 @@ class _MessageBubble extends StatelessWidget {
                       children: [
                         Builder(builder: (context) {
                           final double charSize = Theme.of(context).textTheme.bodySmall!.fontSize!;
-                          final double maxSize = MediaQuery.of(context).size.width * (isMe ? 2 / 3 : 4 / 5);
+                          final double maxSize = MediaQuery.of(context).size.width * (isMe ? 2 / 3 : 5 / 7);
                           final double width = chatMessage.length < 10
                               ? charSize * 4
                               : 0.6 * charSize * chatMessage.length > maxSize
@@ -258,7 +207,7 @@ class _MessageBubble extends StatelessWidget {
                         }),
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * (isMe ? 2 / 3 : 4 / 5),
+                            maxWidth: MediaQuery.of(context).size.width * (isMe ? 2 / 3 : 5 / 7),
                           ),
                           child: Material(
                             borderRadius: isMe
