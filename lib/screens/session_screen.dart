@@ -287,7 +287,61 @@ class _Expanded extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               MaterialButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog<void>(
+                    context: context,
+                    builder: (dialogContext) {
+                      return Dialog(
+                        backgroundColor: Colors.grey.shade900,
+                        insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery.of(dialogContext).size.width / 3),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(kHPadding),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'LLM Playground',
+                                    style: Theme.of(dialogContext).textTheme.titleLarge?.copyWith(color: Colors.white),
+                                  ),
+                                  const Spacer(),
+                                  IconButton(
+                                    onPressed: () => Navigator.of(dialogContext).pop(),
+                                    icon: const Icon(Icons.close, color: Colors.white70),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'Version 1.0.0',
+                                style: Theme.of(dialogContext).textTheme.bodySmall?.copyWith(color: Colors.white54),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 24),
+                                child: Text(
+                                  'LLM Playground is a portal to try out demo versioning of various LLM models. ',
+                                  style: Theme.of(dialogContext).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () => Navigator.of(dialogContext).pop(),
+                                  child: Text(
+                                    'Close',
+                                    style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
                 minWidth: 0,
                 elevation: 0,
                 highlightElevation: 0,
