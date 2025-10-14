@@ -390,6 +390,7 @@ class _Colapsed extends StatelessWidget {
                           reverseDuration: const Duration(milliseconds: 333),
                           vsync: overlayState,
                         );
+                        final hoveredIndex = ValueNotifier<int?>(null);
                         final animation = CurvedAnimation(
                           parent: controller,
                           curve: Curves.easeOutCubic,
@@ -404,6 +405,7 @@ class _Colapsed extends StatelessWidget {
                             return;
                           }
                           dismissed = true;
+                          hoveredIndex.dispose();
                           await controller.reverse();
                           entry.remove();
                           controller.dispose();
@@ -437,29 +439,57 @@ class _Colapsed extends StatelessWidget {
                                           color: Colors.grey.shade900,
                                           borderRadius: BorderRadius.circular(6),
                                         ),
-                                        padding: const EdgeInsets.symmetric(vertical: kHPadding / 2),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: List.generate(menuOptions.length, (index) {
                                             final option = menuOptions[index];
-                                            return SizedBox(
-                                              height: itemHeights[index],
-                                              child: InkWell(
-                                                onTap: () => closeMenu(option.value),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                  child: Align(
-                                                    alignment: Alignment.centerLeft,
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(option.iconData, size: 18, color: Colors.white),
-                                                        const SizedBox(width: 6),
-                                                        Text(option.label, style: textStyle),
-                                                      ],
+                                            return ValueListenableBuilder<int?>(
+                                              valueListenable: hoveredIndex,
+                                              builder: (context, hoveredValue, _) {
+                                                final bool isHovered = hoveredValue == index;
+                                                final borderRadius = BorderRadius.only(
+                                                  topLeft: index == 0 ? const Radius.circular(6) : Radius.zero,
+                                                  topRight: index == 0 ? const Radius.circular(6) : Radius.zero,
+                                                  bottomLeft: index == menuOptions.length - 1
+                                                      ? const Radius.circular(6)
+                                                      : Radius.zero,
+                                                  bottomRight: index == menuOptions.length - 1
+                                                      ? const Radius.circular(6)
+                                                      : Radius.zero,
+                                                );
+                                                return AnimatedContainer(
+                                                  duration: const Duration(milliseconds: 120),
+                                                  height: itemHeights[index] + kHPadding / 2,
+                                                  decoration: BoxDecoration(
+                                                    color: isHovered ? Colors.grey.shade800 : Colors.transparent,
+                                                    borderRadius: borderRadius,
+                                                  ),
+                                                  child: InkWell(
+                                                    onTap: () => closeMenu(option.value),
+                                                    onHover: (hovering) {
+                                                      if (hovering) {
+                                                        hoveredIndex.value = index;
+                                                      } else if (hoveredIndex.value == index) {
+                                                        hoveredIndex.value = null;
+                                                      }
+                                                    },
+                                                    borderRadius: borderRadius,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                      child: Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(option.iconData, size: 18, color: Colors.white),
+                                                            const SizedBox(width: 6),
+                                                            Text(option.label, style: textStyle),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
+                                                );
+                                              },
                                             );
                                           }),
                                         ),
@@ -794,6 +824,7 @@ class _Expanded extends StatelessWidget {
                           reverseDuration: const Duration(milliseconds: 333),
                           vsync: overlayState,
                         );
+                        final hoveredIndex = ValueNotifier<int?>(null);
                         final animation = CurvedAnimation(
                           parent: controller,
                           curve: Curves.easeOutCubic,
@@ -808,6 +839,7 @@ class _Expanded extends StatelessWidget {
                             return;
                           }
                           dismissed = true;
+                          hoveredIndex.dispose();
                           await controller.reverse();
                           entry.remove();
                           controller.dispose();
@@ -841,29 +873,57 @@ class _Expanded extends StatelessWidget {
                                           color: Colors.grey.shade900,
                                           borderRadius: BorderRadius.circular(6),
                                         ),
-                                        padding: const EdgeInsets.symmetric(vertical: kHPadding / 2),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: List.generate(menuOptions.length, (index) {
                                             final option = menuOptions[index];
-                                            return SizedBox(
-                                              height: itemHeights[index],
-                                              child: InkWell(
-                                                onTap: () => closeMenu(option.value),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                  child: Align(
-                                                    alignment: Alignment.centerLeft,
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(option.iconData, size: 18, color: Colors.white),
-                                                        const SizedBox(width: 6),
-                                                        Text(option.label, style: textStyle),
-                                                      ],
+                                            return ValueListenableBuilder<int?>(
+                                              valueListenable: hoveredIndex,
+                                              builder: (context, hoveredValue, _) {
+                                                final bool isHovered = hoveredValue == index;
+                                                final borderRadius = BorderRadius.only(
+                                                  topLeft: index == 0 ? const Radius.circular(6) : Radius.zero,
+                                                  topRight: index == 0 ? const Radius.circular(6) : Radius.zero,
+                                                  bottomLeft: index == menuOptions.length - 1
+                                                      ? const Radius.circular(6)
+                                                      : Radius.zero,
+                                                  bottomRight: index == menuOptions.length - 1
+                                                      ? const Radius.circular(6)
+                                                      : Radius.zero,
+                                                );
+                                                return AnimatedContainer(
+                                                  duration: const Duration(milliseconds: 120),
+                                                  height: itemHeights[index] + kHPadding / 2,
+                                                  decoration: BoxDecoration(
+                                                    color: isHovered ? Colors.grey.shade800 : Colors.transparent,
+                                                    borderRadius: borderRadius,
+                                                  ),
+                                                  child: InkWell(
+                                                    onTap: () => closeMenu(option.value),
+                                                    onHover: (hovering) {
+                                                      if (hovering) {
+                                                        hoveredIndex.value = index;
+                                                      } else if (hoveredIndex.value == index) {
+                                                        hoveredIndex.value = null;
+                                                      }
+                                                    },
+                                                    borderRadius: borderRadius,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                      child: Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(option.iconData, size: 18, color: Colors.white),
+                                                            const SizedBox(width: 6),
+                                                            Text(option.label, style: textStyle),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
+                                                );
+                                              },
                                             );
                                           }),
                                         ),
