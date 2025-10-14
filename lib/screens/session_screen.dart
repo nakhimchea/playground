@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart' show SvgPicture;
 
 import '../config/constant.dart' show kHPadding, kVPadding;
+import '../helpers/now_mse.dart';
 import '../icons/icons.dart';
 
 class SessionScreen extends StatefulWidget {
@@ -78,6 +79,15 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 }
 
+double measureTextHeight(BuildContext context, String text, TextStyle style) {
+  final TextPainter painter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    maxLines: 1,
+    textDirection: Directionality.of(context),
+  )..layout();
+  return painter.height;
+}
+
 class _Expanded extends StatelessWidget {
   const _Expanded({
     super.key,
@@ -133,13 +143,112 @@ class _Expanded extends StatelessWidget {
           ),
           Expanded(child: const SizedBox.shrink()),
           const SizedBox(height: 12),
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.white12,
-            child: Text(
-              'GU',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
-            ),
+          Stack(
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: Colors.white12,
+                child: Text(
+                  'GU',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                ),
+              ),
+              Positioned.fill(
+                child: Builder(
+                  builder: (buttonContext) {
+                    return MaterialButton(
+                      onPressed: () async {
+                        final RenderBox? button = buttonContext.findRenderObject() as RenderBox?;
+                        final OverlayState overlayState = Overlay.of(buttonContext);
+                        final RenderBox? overlay = overlayState.context.findRenderObject() as RenderBox?;
+                        if (button == null || overlay == null) {
+                          return;
+                        }
+
+                        final double menuWidth = MediaQuery.of(context).size.width / 5 - 2 * kHPadding;
+                        final textTheme = Theme.of(buttonContext).textTheme;
+                        final TextStyle textStyle = textTheme.bodyLarge!.copyWith(color: Colors.white);
+                        final menuOptions = <_MenuOption<String>>[
+                          const _MenuOption<String>(
+                            value: 'settings',
+                            iconData: CustomOutlinedIcons.setting,
+                            label: 'Settings',
+                          ),
+                          const _MenuOption<String>(
+                            value: 'log_out',
+                            iconData: CustomOutlinedIcons.logout,
+                            label: 'Log out',
+                          ),
+                        ];
+
+                        final List<double> itemHeights = <double>[];
+                        double totalItemHeight = 0;
+                        for (final option in menuOptions) {
+                          final double entryHeight = measureTextHeight(buttonContext, option.label, textStyle) +
+                              (menuOptions.length * kVPadding / 2);
+                          itemHeights.add(entryHeight);
+                          totalItemHeight += entryHeight;
+                        }
+                        final double menuHeight = totalItemHeight + kHPadding;
+
+                        final Offset buttonTopLeft = button.localToGlobal(Offset.zero, ancestor: overlay);
+                        double left = buttonTopLeft.dx;
+                        final double overlayWidth = overlay.size.width;
+                        if (left + menuWidth > overlayWidth) {
+                          left = overlayWidth - menuWidth;
+                        }
+                        if (left < 0) {
+                          left = 0;
+                        }
+                        final double top = buttonTopLeft.dy - menuHeight;
+                        final double right = overlayWidth - left - menuWidth;
+                        final double bottom = overlay.size.height - buttonTopLeft.dy;
+
+                        await showMenu<String>(
+                          context: buttonContext,
+                          position: RelativeRect.fromLTRB(
+                            left,
+                            top,
+                            right < 0 ? 0 : right,
+                            bottom < 0 ? 0 : bottom,
+                          ),
+                          color: Colors.grey.shade900,
+                          constraints: BoxConstraints.tightFor(width: menuWidth),
+                          items: List<PopupMenuEntry<String>>.generate(
+                            menuOptions.length,
+                            (index) => PopupMenuItem<String>(
+                              value: menuOptions[index].value,
+                              height: itemHeights[index],
+                              padding: EdgeInsets.zero,
+                              child: SizedBox(
+                                width: menuWidth,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        Icon(menuOptions[index].iconData, size: 18, color: Colors.white),
+                                        const SizedBox(width: 6),
+                                        Text(menuOptions[index].label, style: textStyle),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      minWidth: 0,
+                      elevation: 0,
+                      highlightElevation: 0,
+                      padding: EdgeInsets.zero,
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -166,15 +275,6 @@ class _Collapsed extends StatelessWidget {
   final VoidCallback onToggle;
   final String sessionUuid;
 
-  double _measureTextHeight(BuildContext context, String text, TextStyle style) {
-    final TextPainter painter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      maxLines: 1,
-      textDirection: Directionality.of(context),
-    )..layout();
-    return painter.height;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -192,11 +292,6 @@ class _Collapsed extends StatelessWidget {
                 width: 36,
                 height: 36,
                 fit: BoxFit.contain,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'LLM Playground',
-                style: Theme.of(context).textTheme.titleLarge,
               ),
               const Spacer(),
               IconButton(
@@ -221,9 +316,14 @@ class _Collapsed extends StatelessWidget {
                       color: Colors.white70,
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      'New chat',
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white70),
+                    Flexible(
+                      child: Text(
+                        'New chat',
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white70),
+                      ),
                     ),
                   ],
                 ),
@@ -260,13 +360,25 @@ class _Collapsed extends StatelessWidget {
                         minWidth: 0,
                         elevation: 0,
                         highlightElevation: 0,
-                        padding: EdgeInsets.symmetric(vertical: kHPadding),
+                        padding: EdgeInsets.all(kHPadding),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         color: Colors.transparent,
                         splashColor: Colors.white.withValues(alpha: 0.1),
-                        child: Text(
-                          "(MODEL_NAME) Some Sample Chat Title $index",
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              "(MODEL_NAME) Some Sample Chat Title $index",
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                              style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),
+                            ),
+                            Text(
+                              "18999348948934",
+                              style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white70),
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -292,18 +404,26 @@ class _Collapsed extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Guest User',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
-                      ),
-                      Text(
-                        sessionUuid,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
-                      ),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Guest User',
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                        ),
+                        Text(
+                          sessionUuid,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                        ),
+                      ],
+                    ),
                   ),
                   Spacer(),
                   Icon(CustomOutlinedIcons.setting, color: Colors.white70),
@@ -340,7 +460,7 @@ class _Collapsed extends StatelessWidget {
                         final List<double> itemHeights = <double>[];
                         double totalItemHeight = 0;
                         for (final option in menuOptions) {
-                          final double entryHeight = _measureTextHeight(buttonContext, option.label, textStyle) +
+                          final double entryHeight = measureTextHeight(buttonContext, option.label, textStyle) +
                               (menuOptions.length * kVPadding / 2);
                           itemHeights.add(entryHeight);
                           totalItemHeight += entryHeight;
