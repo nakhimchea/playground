@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart' show SvgPicture;
@@ -369,45 +371,109 @@ class _Colapsed extends StatelessWidget {
                         if (left < 0) {
                           left = 0;
                         }
-                        final double top = buttonTopLeft.dy - menuHeight;
+                        final double buttonHeight = button.size.height;
+                        double top = buttonTopLeft.dy - menuHeight;
+                        if (top < 0) {
+                          top = buttonTopLeft.dy + buttonHeight;
+                        }
+                        if (top + menuHeight > overlay.size.height) {
+                          top = overlay.size.height - menuHeight;
+                        }
+                        if (top < 0) {
+                          top = 0;
+                        }
                         final double right = overlayWidth - left - menuWidth;
-                        final double bottom = overlay.size.height - buttonTopLeft.dy;
 
-                        await showMenu<String>(
-                          context: buttonContext,
-                          position: RelativeRect.fromLTRB(
-                            left,
-                            top,
-                            right < 0 ? 0 : right,
-                            bottom < 0 ? 0 : bottom,
-                          ),
-                          color: Colors.grey.shade900,
-                          constraints: BoxConstraints.tightFor(width: menuWidth),
-                          items: List<PopupMenuEntry<String>>.generate(
-                            menuOptions.length,
-                            (index) => PopupMenuItem<String>(
-                              value: menuOptions[index].value,
-                              height: itemHeights[index],
-                              padding: EdgeInsets.zero,
-                              child: SizedBox(
-                                width: menuWidth,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Row(
-                                      children: [
-                                        Icon(menuOptions[index].iconData, size: 18, color: Colors.white),
-                                        const SizedBox(width: 6),
-                                        Text(menuOptions[index].label, style: textStyle),
-                                      ],
+                        final completer = Completer<String?>();
+                        final controller = AnimationController(
+                          duration: const Duration(milliseconds: 333),
+                          reverseDuration: const Duration(milliseconds: 333),
+                          vsync: overlayState,
+                        );
+                        final animation = CurvedAnimation(
+                          parent: controller,
+                          curve: Curves.easeOutCubic,
+                          reverseCurve: Curves.easeInCubic,
+                        );
+
+                        late OverlayEntry entry;
+                        var dismissed = false;
+
+                        Future<void> closeMenu([String? value]) async {
+                          if (dismissed) {
+                            return;
+                          }
+                          dismissed = true;
+                          await controller.reverse();
+                          entry.remove();
+                          controller.dispose();
+                          if (!completer.isCompleted) {
+                            completer.complete(value);
+                          }
+                        }
+
+                        entry = OverlayEntry(
+                          builder: (context) {
+                            return Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onTap: () => closeMenu(),
+                                    child: const SizedBox.shrink(),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: left,
+                                  top: top,
+                                  right: right < 0 ? 0 : null,
+                                  child: FadeTransition(
+                                    opacity: animation,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: Container(
+                                        width: menuWidth,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade900,
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: kHPadding / 2),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: List.generate(menuOptions.length, (index) {
+                                            final option = menuOptions[index];
+                                            return SizedBox(
+                                              height: itemHeights[index],
+                                              child: InkWell(
+                                                onTap: () => closeMenu(option.value),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                  child: Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(option.iconData, size: 18, color: Colors.white),
+                                                        const SizedBox(width: 6),
+                                                        Text(option.label, style: textStyle),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
+                              ],
+                            );
+                          },
                         );
+                        overlayState.insert(entry);
+                        controller.forward();
+                        await completer.future;
                       },
                       minWidth: 0,
                       elevation: 0,
@@ -709,45 +775,109 @@ class _Expanded extends StatelessWidget {
                         if (left < 0) {
                           left = 0;
                         }
-                        final double top = buttonTopLeft.dy - menuHeight;
+                        final double buttonHeight = button.size.height;
+                        double top = buttonTopLeft.dy - menuHeight;
+                        if (top < 0) {
+                          top = buttonTopLeft.dy + buttonHeight;
+                        }
+                        if (top + menuHeight > overlay.size.height) {
+                          top = overlay.size.height - menuHeight;
+                        }
+                        if (top < 0) {
+                          top = 0;
+                        }
                         final double right = overlayWidth - left - menuWidth;
-                        final double bottom = overlay.size.height - buttonTopLeft.dy;
 
-                        await showMenu<String>(
-                          context: buttonContext,
-                          position: RelativeRect.fromLTRB(
-                            left,
-                            top,
-                            right < 0 ? 0 : right,
-                            bottom < 0 ? 0 : bottom,
-                          ),
-                          color: Colors.grey.shade900,
-                          constraints: BoxConstraints.tightFor(width: menuWidth),
-                          items: List<PopupMenuEntry<String>>.generate(
-                            menuOptions.length,
-                            (index) => PopupMenuItem<String>(
-                              value: menuOptions[index].value,
-                              height: itemHeights[index],
-                              padding: EdgeInsets.zero,
-                              child: SizedBox(
-                                width: menuWidth,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Row(
-                                      children: [
-                                        Icon(menuOptions[index].iconData, size: 18, color: Colors.white),
-                                        const SizedBox(width: 6),
-                                        Text(menuOptions[index].label, style: textStyle),
-                                      ],
+                        final completer = Completer<String?>();
+                        final controller = AnimationController(
+                          duration: const Duration(milliseconds: 333),
+                          reverseDuration: const Duration(milliseconds: 333),
+                          vsync: overlayState,
+                        );
+                        final animation = CurvedAnimation(
+                          parent: controller,
+                          curve: Curves.easeOutCubic,
+                          reverseCurve: Curves.easeInCubic,
+                        );
+
+                        late OverlayEntry entry;
+                        var dismissed = false;
+
+                        Future<void> closeMenu([String? value]) async {
+                          if (dismissed) {
+                            return;
+                          }
+                          dismissed = true;
+                          await controller.reverse();
+                          entry.remove();
+                          controller.dispose();
+                          if (!completer.isCompleted) {
+                            completer.complete(value);
+                          }
+                        }
+
+                        entry = OverlayEntry(
+                          builder: (context) {
+                            return Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onTap: () => closeMenu(),
+                                    child: const SizedBox.shrink(),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: left,
+                                  top: top,
+                                  right: right < 0 ? 0 : null,
+                                  child: FadeTransition(
+                                    opacity: animation,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: Container(
+                                        width: menuWidth,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade900,
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: kHPadding / 2),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: List.generate(menuOptions.length, (index) {
+                                            final option = menuOptions[index];
+                                            return SizedBox(
+                                              height: itemHeights[index],
+                                              child: InkWell(
+                                                onTap: () => closeMenu(option.value),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                  child: Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(option.iconData, size: 18, color: Colors.white),
+                                                        const SizedBox(width: 6),
+                                                        Text(option.label, style: textStyle),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
+                              ],
+                            );
+                          },
                         );
+                        overlayState.insert(entry);
+                        controller.forward();
+                        await completer.future;
                       },
                       minWidth: 0,
                       elevation: 0,
