@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart' show SvgPicture;
 
 import '../config/constant.dart' show kHPadding, kVPadding;
-import '../helpers/now_mse.dart';
 import '../icons/icons.dart';
 
 class SessionScreen extends StatefulWidget {
@@ -14,13 +13,13 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-  bool isExpanded = true;
+  bool isColapsed = true;
   bool isHover = false;
 
-  void _toggleExpanded() {
+  void _toggleColapsed() {
     setState(() {
-      isExpanded = !isExpanded;
-      if (!isExpanded) {
+      isColapsed = !isColapsed;
+      if (!isColapsed) {
         isHover = false;
       }
     });
@@ -60,18 +59,18 @@ class _SessionScreenState extends State<SessionScreen> {
             ),
           );
         },
-        child: isExpanded
-            ? _Expanded(
-                key: const ValueKey('expanded-panel'),
-                isExpanded: isExpanded,
+        child: isColapsed
+            ? _Colapsed(
+                key: const ValueKey('collapsed-panel'),
+                isColapsed: isColapsed,
                 isHover: isHover,
                 onHoverChanged: _handleHoverChanged,
-                onToggle: _toggleExpanded,
+                onToggleColapsed: _toggleColapsed,
               )
-            : _Collapsed(
-                key: const ValueKey('collapsed-panel'),
-                isExpanded: isExpanded,
-                onToggle: _toggleExpanded,
+            : _Expanded(
+                key: const ValueKey('expanded-panel'),
+                isColapsed: isColapsed,
+                onToggleColapsed: _toggleColapsed,
                 sessionUuid: widget.sessionUuid,
               ),
       ),
@@ -88,19 +87,19 @@ double measureTextHeight(BuildContext context, String text, TextStyle style) {
   return painter.height;
 }
 
-class _Expanded extends StatelessWidget {
-  const _Expanded({
+class _Colapsed extends StatelessWidget {
+  const _Colapsed({
     super.key,
-    required this.isExpanded,
+    required this.isColapsed,
     required this.isHover,
     required this.onHoverChanged,
-    required this.onToggle,
+    required this.onToggleColapsed,
   });
 
-  final bool isExpanded;
+  final bool isColapsed;
   final bool isHover;
   final ValueChanged<bool> onHoverChanged;
-  final VoidCallback onToggle;
+  final VoidCallback onToggleColapsed;
 
   @override
   Widget build(BuildContext context) {
@@ -118,12 +117,12 @@ class _Expanded extends StatelessWidget {
                 ? IconButton(
                     onPressed: () {
                       onHoverChanged(false);
-                      onToggle();
+                      onToggleColapsed();
                     },
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints.tightFor(width: 36, height: 36),
                     icon: Icon(
-                      isExpanded ? Icons.arrow_forward_ios_outlined : Icons.arrow_back_ios_outlined,
+                      isColapsed ? Icons.arrow_forward_ios_outlined : Icons.arrow_back_ios_outlined,
                       size: 18,
                     ),
                   )
@@ -263,16 +262,16 @@ class _MenuOption<T> {
   const _MenuOption({required this.value, required this.iconData, required this.label});
 }
 
-class _Collapsed extends StatelessWidget {
-  const _Collapsed({
+class _Expanded extends StatelessWidget {
+  const _Expanded({
     super.key,
-    required this.isExpanded,
-    required this.onToggle,
+    required this.isColapsed,
+    required this.onToggleColapsed,
     required this.sessionUuid,
   });
 
-  final bool isExpanded;
-  final VoidCallback onToggle;
+  final bool isColapsed;
+  final VoidCallback onToggleColapsed;
   final String sessionUuid;
 
   @override
@@ -287,19 +286,26 @@ class _Collapsed extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset(
-                'assets/images/playground_logo.svg',
-                width: 36,
-                height: 36,
-                fit: BoxFit.contain,
+              MaterialButton(
+                onPressed: () {},
+                minWidth: 0,
+                elevation: 0,
+                highlightElevation: 0,
+                padding: EdgeInsets.zero,
+                child: SvgPicture.asset(
+                  'assets/images/playground_logo.svg',
+                  width: 36,
+                  height: 36,
+                  fit: BoxFit.contain,
+                ),
               ),
               const Spacer(),
               IconButton(
-                onPressed: onToggle,
+                onPressed: onToggleColapsed,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints.tightFor(width: 36, height: 36),
                 icon: Icon(
-                  isExpanded ? Icons.arrow_forward_ios_outlined : Icons.arrow_back_ios_outlined,
+                  isColapsed ? Icons.arrow_forward_ios_outlined : Icons.arrow_back_ios_outlined,
                   size: 18,
                 ),
               ),
@@ -330,7 +336,7 @@ class _Collapsed extends StatelessWidget {
                 Positioned.fill(
                   child: MaterialButton(
                     onPressed: () {
-                      Future.delayed(const Duration(milliseconds: 150), onToggle);
+                      Future.delayed(const Duration(milliseconds: 150), onToggleColapsed);
                     },
                     minWidth: 0,
                     elevation: 0,
@@ -355,7 +361,7 @@ class _Collapsed extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return MaterialButton(
                         onPressed: () {
-                          Future.delayed(const Duration(milliseconds: 150), onToggle);
+                          Future.delayed(const Duration(milliseconds: 150), onToggleColapsed);
                         },
                         minWidth: 0,
                         elevation: 0,
