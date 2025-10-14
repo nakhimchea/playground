@@ -13,6 +13,7 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
+  bool isNew = true;
   bool isColapsed = true;
   bool isHover = false;
 
@@ -35,45 +36,84 @@ class _SessionScreenState extends State<SessionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        layoutBuilder: (currentChild, previousChildren) {
-          return Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              ...previousChildren,
-              if (currentChild != null) currentChild,
-            ],
-          );
-        },
-        transitionBuilder: (child, animation) {
-          return FadeTransition(
-            opacity: animation,
-            child: SizeTransition(
-              sizeFactor: animation,
-              axis: Axis.horizontal,
-              axisAlignment: -1,
-              child: child,
-            ),
-          );
-        },
-        child: isColapsed
-            ? _Colapsed(
-                key: const ValueKey('collapsed-panel'),
-                isColapsed: isColapsed,
-                isHover: isHover,
-                onHoverChanged: _handleHoverChanged,
-                onToggleColapsed: _toggleColapsed,
-              )
-            : _Expanded(
-                key: const ValueKey('expanded-panel'),
-                isColapsed: isColapsed,
-                onToggleColapsed: _toggleColapsed,
-                sessionUuid: widget.sessionUuid,
-              ),
+      body: Row(
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
+            layoutBuilder: (currentChild, previousChildren) {
+              return Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  ...previousChildren,
+                  if (currentChild != null) currentChild,
+                ],
+              );
+            },
+            transitionBuilder: (child, animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SizeTransition(
+                  sizeFactor: animation,
+                  axis: Axis.horizontal,
+                  axisAlignment: -1,
+                  child: child,
+                ),
+              );
+            },
+            child: isColapsed
+                ? _Colapsed(
+                    key: const ValueKey('collapsed-panel'),
+                    isColapsed: isColapsed,
+                    isHover: isHover,
+                    onHoverChanged: _handleHoverChanged,
+                    onToggleColapsed: _toggleColapsed,
+                  )
+                : _Expanded(
+                    key: const ValueKey('expanded-panel'),
+                    isColapsed: isColapsed,
+                    onToggleColapsed: _toggleColapsed,
+                    sessionUuid: widget.sessionUuid,
+                  ),
+          ),
+          Expanded(
+            child: isNew ? _StartNewChat() : _ShowChatScreen(),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+class _StartNewChat extends StatefulWidget {
+  const _StartNewChat();
+
+  @override
+  State<_StartNewChat> createState() => __StartNewChatState();
+}
+
+class __StartNewChatState extends State<_StartNewChat> {
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Start New Chat",
+    );
+  }
+}
+
+class _ShowChatScreen extends StatefulWidget {
+  const _ShowChatScreen();
+
+  @override
+  State<_ShowChatScreen> createState() => __ShowChatScreenState();
+}
+
+class __ShowChatScreenState extends State<_ShowChatScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Show Chat Screen",
     );
   }
 }
